@@ -177,11 +177,13 @@ public:
 		LocalRayResult(const btCollisionObject* collisionObject,
 					   LocalShapeInfo* localShapeInfo,
 					   const btVector3& hitNormalLocal,
-					   btScalar hitFraction)
+					   btScalar hitFraction,
+					   const btCollisionShape* shape = nullptr)
 			: m_collisionObject(collisionObject),
 			  m_localShapeInfo(localShapeInfo),
 			  m_hitNormalLocal(hitNormalLocal),
-			  m_hitFraction(hitFraction)
+			  m_hitFraction(hitFraction),
+			  m_shape(shape)
 		{
 		}
 
@@ -189,6 +191,7 @@ public:
 		LocalShapeInfo* m_localShapeInfo;
 		btVector3 m_hitNormalLocal;
 		btScalar m_hitFraction;
+		const btCollisionShape* m_shape;
 	};
 
 	///RayResultCallback is used to report new raycast results
@@ -196,6 +199,7 @@ public:
 	{
 		btScalar m_closestHitFraction;
 		const btCollisionObject* m_collisionObject;
+		const btCollisionShape* m_shape;
 		int m_collisionFilterGroup;
 		int m_collisionFilterMask;
 		//@BP Mod - Custom flags, currently used to enable backface culling on tri-meshes, see btRaycastCallback.h. Apply any of the EFlags defined there on m_flags here to invoke.
@@ -212,6 +216,7 @@ public:
 		RayResultCallback()
 			: m_closestHitFraction(btScalar(1.)),
 			  m_collisionObject(0),
+			  m_shape(0),
 			  m_collisionFilterGroup(btBroadphaseProxy::DefaultFilter),
 			  m_collisionFilterMask(btBroadphaseProxy::AllFilter),
 			  //@BP Mod
@@ -250,6 +255,7 @@ public:
 
 			m_closestHitFraction = rayResult.m_hitFraction;
 			m_collisionObject = rayResult.m_collisionObject;
+			m_shape = rayResult.m_shape;
 			if (normalInWorldSpace)
 			{
 				m_hitNormalWorld = rayResult.m_hitNormalLocal;
@@ -284,6 +290,7 @@ public:
 		virtual btScalar addSingleResult(LocalRayResult& rayResult, bool normalInWorldSpace)
 		{
 			m_collisionObject = rayResult.m_collisionObject;
+			m_shape = rayResult.m_shape;
 			m_collisionObjects.push_back(rayResult.m_collisionObject);
 			btVector3 hitNormalWorld;
 			if (normalInWorldSpace)

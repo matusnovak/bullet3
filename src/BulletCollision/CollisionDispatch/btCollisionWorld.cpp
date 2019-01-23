@@ -334,7 +334,8 @@ void btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans, co
 						collisionObjectWrap->getCollisionObject(),
 						0,
 						castResult.m_normal,
-						castResult.m_fraction);
+						castResult.m_fraction,
+						collisionObjectWrap->getCollisionShape());
 
 					bool normalInWorldSpace = true;
 					resultCallback.addSingleResult(localRayResult, normalInWorldSpace);
@@ -376,7 +377,8 @@ void btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans, co
 					btCollisionWorld::LocalRayResult rayResult(m_collisionObject,
 															   &shapeInfo,
 															   hitNormalWorld,
-															   hitFraction);
+															   hitFraction,
+															   m_triangleMesh);
 
 					bool normalInWorldSpace = true;
 					return m_resultCallback->addSingleResult(rayResult, normalInWorldSpace);
@@ -454,7 +456,8 @@ void btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans, co
 						btCollisionWorld::LocalRayResult rayResult(m_collisionObject,
 																   &shapeInfo,
 																   hitNormalWorld,
-																   hitFraction);
+																   hitFraction,
+																   m_triangleMesh);
 
 						bool normalInWorldSpace = true;
 						return m_resultCallback->addSingleResult(rayResult, normalInWorldSpace);
